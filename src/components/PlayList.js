@@ -1,16 +1,17 @@
-import { Layout} from 'antd';
 import {makeStyles, createStyles} from '@material-ui/core'
+import { Layout} from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-export default function SearchResult() {
+
+export default function Playlist() {
     const classes = useStyles();
     console.log("test")
     return (
         //<h1>test</h1>
         <Layout style={{height:"100vh"}}>
-             <Header className={classes.header}>Result</Header>
-             <Content style={{ margin: '24px 16px 0', backgroundColor:'red'}}>
+             <Header className={classes.header}>Playlist</Header>
+             <Content style={{ margin: '24px 16px 0', backgroundColor:'green'}}>
              </Content>
         </Layout>
     );
