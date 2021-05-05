@@ -2,13 +2,28 @@ import { Layout, Menu } from 'antd';
 import { InfoCircleOutlined, PlayCircleOutlined , SearchOutlined, HomeOutlined ,ReadOutlined} from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import {makeStyles, createStyles} from '@material-ui/core'
+import AudioReactRecorder, { RecordState } from 'audio-react-recorder'
 import 'antd/dist/antd.css';
+import { useState } from 'react';
 
 const { Sider } = Layout;
 
 export default function Navigation() {
     const history = useHistory();
     const classes = useStyles();
+    const [isRecord,setIsRecord] = useState();
+    
+    const start = () => {
+        setIsRecord(RecordState.START);
+    }
+     
+    const stop = () => {
+        setIsRecord(RecordState.STOP);
+    }
+     
+    const onStop = (audioData) => {
+        console.log('audioData', audioData)
+    }
 
     return (
         <Sider
@@ -41,6 +56,11 @@ export default function Navigation() {
             Lyrics
             </Menu.Item>
         </Menu>
+        <div>
+            <AudioReactRecorder state={isRecord} onStop={onStop} canvasWidth="10" canvasHeight="50"/>
+            <button onClick={start}>Start</button>
+            <button onClick={stop}>Stop</button>
+        </div>
         </Sider> 
         
     );
