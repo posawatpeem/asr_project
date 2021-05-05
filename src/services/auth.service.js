@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const client_data = {
-    client_id: '464a90a18eb6466c81bd0c0351493050',
-    clinet_secret: 'aca9ce3362964e148fd36852236530ac'
+    client_id: 'b6d7bafeb31a49f4b7cae4176f4d3cef',
+    clinet_secret: 'c6fd4dc5d4ac4d89801fb9a586524102',
 };
 
 export const login = async (values) => {
