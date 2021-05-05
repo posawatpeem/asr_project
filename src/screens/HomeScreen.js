@@ -7,8 +7,8 @@ import SearchResult from '../components/SearchResult';
 import SongDetail from '../components/SongDetail';
 import Playlist from '../components/PlayList';
 import Lyrics from '../components/Lyrics';
-import { login, saveToken } from '../services/auth.service';
-import SearchBar from '../components/SearchBar';
+import { login } from '../services/auth.service';
+
 const { Header, Content, Footer, Sider } = Layout;
 
 
@@ -44,9 +44,8 @@ export default function HomeScreen() {
         let code = urlParam.get('code');
         let payload = "grant_type=authorization_code"+
             "&code=" + code +
-            "&redirect_uri="+ client_data.uri
-        const data = await login(payload, client_data);
-        saveToken(data);
+            "&redirect_uri="+ client_data.uri;
+        const data = await login(payload);
         console.log(data);
     }
     
