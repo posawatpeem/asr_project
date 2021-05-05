@@ -3,8 +3,6 @@ import {BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomeScreen from './screens/HomeScreen';
 
 function App() {
-  
-  
 
   return (
     <Router>
