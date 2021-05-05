@@ -7,8 +7,9 @@ const { Header, Content, Footer, Sider } = Layout;
 
 
 export default function Lyrics() {
+    
     const classes = useStyles();
-    console.log("test")
+    
     return (
         //<h1>test</h1>
         <Layout style={{height:"100vh"}}>
