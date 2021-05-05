@@ -7,7 +7,7 @@ import SearchResult from '../components/SearchResult';
 import SongDetail from '../components/SongDetail';
 import Playlist from '../components/PlayList';
 import Lyrics from '../components/Lyrics';
-import { login } from '../services/auth.service';
+import { login, saveToken } from '../services/auth.service';
 const { Header, Content, Footer, Sider } = Layout;
 const client_data = {
     client_id: '464a90a18eb6466c81bd0c0351493050',
@@ -43,10 +43,9 @@ export default function HomeScreen() {
             "&code=" + code +
             "&redirect_uri="+ client_data.uri
         const data = await login(payload, client_data);
-        if (data.access_token !== undefined) localStorage.setItem("access_token", data.access_token);
-        if (data.refresh_token !== undefined) localStorage.setItem("refresh_token", data.refresh_token);
+        saveToken(data);
         console.log(data);
-        }
+    }
     
 
     console.log(path);
@@ -61,8 +60,7 @@ export default function HomeScreen() {
                 <Route exact path="/lyrics" component={Lyrics}></Route>
             </Switch>
             </Router>
-        </Layout>
-
+        </Layout> 
     );
 }
 

@@ -13,3 +13,8 @@ export const login = async (values, auth) => {
         return response.data
     })
 };
+
+export const  saveToken= (data) => {
+    if (data.access_token !== undefined) localStorage.setItem("access_token", data.access_token);
+    if (data.refresh_token !== undefined) localStorage.setItem("refresh_token", data.refresh_token);
+};
