@@ -14,8 +14,6 @@ import Player from '../components/Player';
 import SpotifyWebApi from 'spotify-web-api-node';
 
 const { Header, Content, Footer, Sider } = Layout;
-
-
 const client_data = {
     client_id: 'b6d7bafeb31a49f4b7cae4176f4d3cef',
     clinet_secret: 'c6fd4dc5d4ac4d89801fb9a586524102',
@@ -71,10 +69,12 @@ export default function HomeScreen() {
         let code = urlParam.get('code');
         let payload = "grant_type=authorization_code"+
             "&code=" + code +
-            "&redirect_uri="+ client_data.uri;
-        const data = await login(payload);
+            "&redirect_uri="+ client_data.uri
+        const data = await login(payload, client_data);
+        if (data.access_token !== undefined) localStorage.setItem("access_token", data.access_token);
+        if (data.refresh_token !== undefined) localStorage.setItem("refresh_token", data.refresh_token);
         console.log(data);
-    }
+        }
     
     function chooseTrack(track) {
         setPlayingTrack(track);

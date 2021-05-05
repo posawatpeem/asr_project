@@ -5,9 +5,8 @@ const { Header, Content, Footer, Sider } = Layout;
 
 export default function SongDetail() {
     const classes = useStyles();
-    console.log("test")
+    
     return (
-        //<h1>test</h1>
         <Layout style={{height:"100vh"}}>
              <Header className={classes.header}>Song Details</Header>
              <Content style={{ margin: '24px 16px 0', backgroundColor:'blue'}}>
