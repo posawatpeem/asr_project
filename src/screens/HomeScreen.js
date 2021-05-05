@@ -8,7 +8,10 @@ import SongDetail from '../components/SongDetail';
 import Playlist from '../components/PlayList';
 import Lyrics from '../components/Lyrics';
 import { login, saveToken } from '../services/auth.service';
+import SearchBar from '../components/SearchBar';
 const { Header, Content, Footer, Sider } = Layout;
+
+
 const client_data = {
     client_id: '464a90a18eb6466c81bd0c0351493050',
     clinet_secret: 'aca9ce3362964e148fd36852236530ac',
