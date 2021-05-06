@@ -116,7 +116,7 @@ export default function Client() {
   }
 
   const stopVoice = (peer) => {
-    
+    setMessage('')
     // close data channel
     if (dc) {
       dc.close();
