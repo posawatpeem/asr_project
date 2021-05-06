@@ -54,13 +54,10 @@ export default function Navigation() {
                 <Menu.Item key="2" icon={<SearchOutlined />} onClick={() => history.push('/search')}>
                 Search 
                 </Menu.Item>
-                <Menu.Item key="3" icon={<InfoCircleOutlined />} onClick={() => history.push('/song-detail')}>
-                Song Detail
-                </Menu.Item>
-                <Menu.Item key="4" icon={<PlayCircleOutlined />} onClick={() => history.push('/playlist')}>
+                <Menu.Item key="3" icon={<PlayCircleOutlined />} onClick={() => history.push('/playlist')}>
                 Playlist
                 </Menu.Item>
-                <Menu.Item key="5" icon={<ReadOutlined />} onClick={() => history.push('/lyrics')}>
+                <Menu.Item key="4" icon={<ReadOutlined />} onClick={() => history.push('/lyrics')}>
                 Lyrics
                 </Menu.Item>
             </Menu>
