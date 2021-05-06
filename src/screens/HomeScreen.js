@@ -9,11 +9,10 @@ import Playlist from '../components/PlayList';
 import Lyrics from '../components/Lyrics';
 import { login } from '../services/auth.service';
 import {makeStyles, createStyles} from '@material-ui/core';
-import SongQueue from '../components/SongQueue';
-import Player from '../components/Player';
 import SpotifyWebApi from 'spotify-web-api-node';
-
+import Home from '../components/Home'
 const { Header, Content, Footer, Sider } = Layout;
+
 const client_data = {
     client_id: 'b6d7bafeb31a49f4b7cae4176f4d3cef',
     clinet_secret: 'c6fd4dc5d4ac4d89801fb9a586524102',
@@ -22,48 +21,22 @@ const client_data = {
 };
 const spotifyUrl = `https://accounts.spotify.com/authorize?client_id=${client_data.client_id}&response_type=code&redirect_uri=${client_data.uri}&show_dialog=true&scope=${client_data.scope}`;
 
-const spotifyApi = new SpotifyWebApi({
-    clientId: 'b6d7bafeb31a49f4b7cae4176f4d3cef',
-    accessToken: localStorage.getItem("access_token")
-})
-
 
 export default function HomeScreen() {
 
     let { path, url } = useRouteMatch();
-    const classes = useStyles();
-    const [currentQueue, setCurrentQueue] = useState([]);
-    const [playingTrack, setPlayingTrack ] = useState(false);
-    
+    const songs = [];
+
     useEffect(() => {
         if (window.location.search.length === 0){
             window.location.href = spotifyUrl;
         }
         else if (window.location.search.length > 0){
             handleRedirect();
-            spotifyApi.searchTracks("love").then(res => {
-                setCurrentQueue(
-                  res.body.tracks.items.map(track => {
-                    const smallestAlbumImage = track.album.images.reduce(
-                      (smallest, image) => {
-                        if (image.height < smallest.height) return image
-                        return smallest
-                      },
-                      track.album.images[0]
-                    )
-                    
-                    return {
-                      artist: track.artists[0].name,
-                      title: track.name,
-                      uri: track.uri,
-                      albumUrl: smallestAlbumImage.url,
-                    }
-                  }).slice(0,10)
-                )
-              })
         }
     }, []);
-    
+
+        
     const handleRedirect = async () =>{
         const urlParam = new URLSearchParams(window.location.search);
         let code = urlParam.get('code');
@@ -74,42 +47,22 @@ export default function HomeScreen() {
         if (data.access_token !== undefined) localStorage.setItem("access_token", data.access_token);
         if (data.refresh_token !== undefined) localStorage.setItem("refresh_token", data.refresh_token);
         console.log(data);
-        }
-    
-    function chooseTrack(track) {
-        setPlayingTrack(track);
-        console.log(track);
     }
-
-    console.log(path);
+    
+    
+    
     return (
         <Layout style={{height:"100vh"}}>
             <Router>
             <Navigation/>
             <Switch>
+                <Route exact path="/" component={Home}></Route>
                 <Route exact path="/search" component={SearchResult}></Route>
                 <Route exact path="/song-detail" component={SongDetail}></Route>
                 <Route exact path="/playlist" component={Playlist}></Route>
                 <Route exact path="/lyrics" component={Lyrics}></Route>
             </Switch>
             </Router>
-            <Layout style={{height:"100vh"}}>
-             <Header className={classes.header}>Player</Header>
-             <Content style={{ margin: '24px 16px 0'}}> 
-                <div>
-                    <Player trackUris={currentQueue.map(track => track.uri)} />
-                </div>
-                <div>
-                    {currentQueue.map(track => (
-                        <SongQueue
-                            track={track}
-                            key={track.uri}
-                            chooseTrack={chooseTrack}
-                        />
-                    ))}
-                </div>
-             </Content>
-            </Layout>
         </Layout> 
     );
 }
