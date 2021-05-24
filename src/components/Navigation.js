@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import {makeStyles, createStyles} from '@material-ui/core'
 import 'antd/dist/antd.css';
 import AudioReactRecorder, { RecordState } from 'audio-react-recorder'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ScriptTag from 'react-script-tag';
 import Client from '../model/client';
 
@@ -12,12 +12,13 @@ import Client from '../model/client';
 const { Sider } = Layout;
 const { TextArea } = Input;
 
-export default function Navigation() {
+export default function Navigation({homeToNav}) {
     
     const history = useHistory();
     const classes = useStyles();
 
     const [isRecord,setIsRecord] = useState(null);
+    const [text, setText] = useState('');
     
     // const start = () => {
     //     console.log("start record");
@@ -32,7 +33,16 @@ export default function Navigation() {
     // const onStop = (audioData) => {
     //     console.log('audioData', audioData)
     // }
+    function getText(t) {
+        //console.log(t);
+        setText(t);
+    }
     
+    useEffect(() => {
+        console.log(text);
+        homeToNav(text);
+    }, [text]);
+
     return (
         <Sider
             breakpoint="lg"
@@ -61,7 +71,7 @@ export default function Navigation() {
                 Lyrics
                 </Menu.Item>
             </Menu>
-            <Client/>
+            <Client getText={getText}/>
         </Sider> 
         
     );

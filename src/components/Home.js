@@ -5,6 +5,8 @@ import SongQueue from '../components/SongQueue';
 import Player from '../components/Player';
 import {makeStyles, createStyles} from '@material-ui/core';
 import SpotifyWebApi from 'spotify-web-api-node';
+import Lyric from './Lyrics';
+import axios from 'axios';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -13,42 +15,40 @@ const spotifyApi = new SpotifyWebApi({
     accessToken: localStorage.getItem("access_token")
 })
 
-export default function Home() {
+const lyricsFinder = require('lyrics-finder');
+
+export default function Home({Song,showLyric}) {
     
     const classes = useStyles();
     const [currentQueue, setCurrentQueue] = useState([]);
     const [shuffle, setShuffle] = useState(false);
+    const [lyrics,setLyrics] = useState("");
+
 
     useEffect(() => {
-        //setCurrentQueue(songs) songs for every page
-        // if (currentQueue.length === 0) {
-        //     spotifyApi.searchTracks("love").then(res => {
-        //         setCurrentQueue(
-        //             res.body.tracks.items.map(track => {
-        //               const smallestAlbumImage = track.album.images.reduce(
-        //                 (smallest, image) => {
-        //                   if (image.height < smallest.height) return image
-        //                   return smallest
-        //                 },
-        //                 track.album.images[0]
-        //               )
-            
-        //               return {
-        //                 artist: track.artists[0].name,
-        //                 title: track.name,
-        //                 uri: track.uri,
-        //                 albumUrl: smallestAlbumImage.url,
-        //               }
-        //             })
-        //           );
-        //     spotifyApi.getMyDevices
-        //     ().then(res => {
-        //         console.log(res.body);
-        //     })
-        //     });
-        // }
+        //if (currentQueue.length === 0) {
+            setCurrentQueue(
+                Song.map(track => {
+                    //console.log(track.track.album.images)
+                    const smallestAlbumImage = track.track.album.images.reduce(
+                    (smallest, image) => {
+                        if (image.height < smallest.height) return image
+                        return smallest
+                    },
+                    track.track.album.images[0]
+                    )
         
-    }, currentQueue.length);
+                    return {
+                    artist: track.track.artists[0].name,
+                    title: track.track.name,
+                    uri: track.track.uri,
+                    albumUrl: smallestAlbumImage.url,
+                    }
+                }).slice(0,5)
+                );   
+        //}
+        
+    }, []);
 
     function chooseTrack(selectedTrack) {
         let index = 0;
@@ -91,6 +91,31 @@ export default function Home() {
         spotifyApi.seek(30000);
     }
         
+    useEffect(() => {
+        console.log(showLyric)
+        if (showLyric) {
+            spotifyApi.getMyCurrentPlayingTrack().then(res =>{
+                //return res.body.artists[0].name, res.body.name
+                //console.log(res.body)
+                if (res.body !== null) {
+                    axios
+                    .get("http://localhost:3001/lyrics", {
+                        params: {
+                        track: res.body.item.name,
+                        artist: res.body.item.artists[0].name,
+                        },
+                    })
+                    .then(res => {
+                        if (res.data !== null) {
+                            setLyrics(res.data.lyrics)
+                        }
+                    })
+                }
+            })
+        } else {
+            setLyrics('')
+        }  
+      })
         
         
     
@@ -105,6 +130,7 @@ export default function Home() {
              <Header className={classes.header} onClick={handleSeek}>to30</Header> */}
 
              <Content style={{ margin: '24px 16px 0'}}> 
+                {console.log(spotifyApi.getMyCurrentPlayingTrack)}
                 <div>
                     <Player trackUris={currentQueue.map(track => track.uri)} />
                 </div>
@@ -117,6 +143,10 @@ export default function Home() {
                             chooseTrack={chooseTrack}
                         />
                     ))}
+                </div>
+                <div>
+                    
+                    <Lyric lyrics={lyrics}></Lyric>
                 </div>
              </Content>
         </Layout>
@@ -135,4 +165,5 @@ const useStyles = makeStyles((theme) => createStyles({
     }
 
 }));
+
 

@@ -1,6 +1,5 @@
 import { Layout} from 'antd';
 import {makeStyles, createStyles} from '@material-ui/core'
-import axios from "axios"
 import SpotifyWebApi from 'spotify-web-api-node';
 import { useEffect, useState } from 'react';
 import SongQueue from '../components/SongQueue';
@@ -13,7 +12,7 @@ const spotifyApi = new SpotifyWebApi({
 })
 
 
-export default function SearchResult() {
+export default function SearchResult({sendSong, category}) {
     const classes = useStyles();
     const [search, setSearch] = useState("")
     const [searchResults, setSearchResults] = useState([])
@@ -24,8 +23,8 @@ export default function SearchResult() {
         //if (!search) return setSearchResults([])
         
         //let cancel = false
-        spotifyApi.getPlaylistsForCategory('rock', {
-            country: 'US',
+        spotifyApi.getPlaylistsForCategory(category, {
+            country: 'TH',
             limit : 6,
             offset : 0
           }).then(res => {
@@ -40,10 +39,9 @@ export default function SearchResult() {
                 },
                 track.images[0]
               )
-    
               return {
                 title: track.name,
-                uri: track.uri,
+                uri: track.id,
                 albumUrl: smallestAlbumImage.url,
               }
             }).slice(0,10)
@@ -51,14 +49,16 @@ export default function SearchResult() {
         }).catch  ( 
             err=> console.log(err)
         )
-            
-        
-    
-      }, [])
+    }, [])
     
 
     function chooseTrack(track) {
         setPlayingTrack(track);
+        spotifyApi.getPlaylistTracks(track.uri).then(res => {
+          //if (cancel) return
+          sendSong(res.body.items);
+          console.log(res.body.items);
+        })
         console.log(track);
     }
 
@@ -69,6 +69,7 @@ export default function SearchResult() {
              <Content style={{ margin: '24px 16px 0'}}> 
                 <div>
                     {searchResults.map(track => (
+                        console.log(track),
                         <SongQueue
                             track={track}
                             key={track.uri}
@@ -77,9 +78,6 @@ export default function SearchResult() {
                     ))}
                 </div>
              </Content>
-             {/* <Content style={{ margin: '24px 16px 0', backgroundColor:'red'}}>
-                 {(console.log(searchResults))}
-             </Content> */}
         </Layout>
     );
 }

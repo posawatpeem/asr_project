@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {makeStyles, createStyles} from '@material-ui/core'
 import {Input} from 'antd';
 
 const { TextArea } = Input;
 
-export default function Client() {
+export default function Client({getText}) {
   const [p, setP] = useState(null);
   const [dc, setDc] = useState(null);
   const classes = useStyles();
+
 
   const [message, setMessage] = useState([])
 
@@ -116,7 +117,6 @@ export default function Client() {
   }
 
   const stopVoice = (peer) => {
-    setMessage('')
     // close data channel
     if (dc) {
       dc.close();
@@ -141,6 +141,13 @@ export default function Client() {
       p.close();
     }, 500);
   }
+
+
+  useEffect(() => {
+      console.log(message);
+      getText(message);
+  }, [message]);
+
   return (
     <div className={classes.button_container}>
       <TextArea rows={3} disabled={true} value={message} disabledInputStyle={classes.text_area} placeholder="Voice command" />
